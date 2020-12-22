@@ -1,4 +1,7 @@
 import http.client
+import json
+import csv
+import time
 
 conn = http.client.HTTPSConnection("weatherapi-com.p.rapidapi.com")
 
@@ -7,11 +10,37 @@ headers = {
     'x-rapidapi-host': "weatherapi-com.p.rapidapi.com"
     }
 
-conn.request("GET", "/forecast.json?q=Greenwich&days=3", headers=headers)
+def createcsv():
 
-res = conn.getresponse()
-data = res.read()
+    conn.request("GET", "/current.json?q=Greenwich,London", headers=headers)
 
-print(data.decode("utf-8"))
+    res = conn.getresponse()
+    data = res.read()
 
-'hellop'
+    data2 = json.loads(data)
+
+    with open('weathercsv.csv', 'w') as f: 
+        w = csv.DictWriter(f, data2.keys())
+        w.writeheader()
+    
+
+def weathercheck():
+    
+    conn.request("GET", "/current.json?q=Johannesburg", headers=headers)
+
+    res = conn.getresponse()
+    data = res.read()
+
+    data2 = json.loads(data)
+
+    print(data2)
+    
+
+    with open('weathercsv.csv', 'a') as f: 
+        w = csv.DictWriter(f, data2.keys())
+        w.writerow(data2)
+        print('data updated')
+
+
+        
+weathercheck()
