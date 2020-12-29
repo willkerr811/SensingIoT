@@ -10,7 +10,9 @@ headers = {
     'x-rapidapi-host': "weatherapi-com.p.rapidapi.com"
     }
 
-def createcsv():
+Rangenames = ['Greenwich,London','Johannesburg,South-Africa','Tonbridge','Branchburg','Abu-Dhabi']
+
+def createcsv(Rangenames):
 
     conn.request("GET", "/current.json?q=Greenwich,London", headers=headers)
 
@@ -19,28 +21,32 @@ def createcsv():
 
     data2 = json.loads(data)
 
-    with open('weathercsv.csv', 'w') as f: 
-        w = csv.DictWriter(f, data2.keys())
-        w.writeheader()
+    for i in Rangenames:
+        with open(i+'.csv', 'w') as f: 
+            w = csv.DictWriter(f, data2.keys())
+            w.writeheader()
     
 
-def weathercheck():
-    
-    conn.request("GET", "/current.json?q=Johannesburg", headers=headers)
+def weathercheck(ranges):
 
-    res = conn.getresponse()
-    data = res.read()
+    for i in ranges:    
+        conn.request("GET", "/current.json?q={}".format(i), headers=headers)
+        res = conn.getresponse()
+        data = res.read()
 
-    data2 = json.loads(data)
+        data2 = json.loads(data)
 
-    print(data2)
-    
-
-    with open('weathercsv.csv', 'a') as f: 
-        w = csv.DictWriter(f, data2.keys())
-        w.writerow(data2)
-        print('data updated')
-
-
+        print(data2)
         
-weathercheck()
+        # with open('weathercsv.csv', 'a') as f: 
+        #     w = csv.DictWriter(f, data2.keys())
+        #     w.writerow(data2)
+        #     print('data updated')
+
+        with open(i+'.csv', 'a') as f: 
+            w = csv.DictWriter(f, data2.keys())
+            w.writerow(data2)
+            print('data updated')
+
+#createcsv(Rangenames)
+weathercheck(Rangenames)
