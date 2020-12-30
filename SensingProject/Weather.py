@@ -42,8 +42,10 @@ def weathercheck(ranges):
         #     w = csv.DictWriter(f, data2.keys())
         #     w.writerow(data2)
         #     print('data updated')
+        
+        path = '/home/pi/sensing/SensingIoT/SensingProject/{}'.format(i+'.csv')
 
-        with open(i+'.csv', 'a') as f: 
+        with open(path, 'a') as f: 
             w = csv.DictWriter(f, data2.keys())
             w.writerow(data2)
             print('data updated')
